@@ -21,7 +21,7 @@
   ],
   "file_handlers": [
     {
-      "action": "./local-notes.html",
+      "action": "/local-offline-md-notes/",
       "accept": {
         "text/markdown": [".md"]
       }
