@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="manifest" href="manifest.json">
   <title>Local Markdown Notes</title>
 
   <!-- Favicon (Material 'Article' icon). Loaded from Google CDN. -->
@@ -935,6 +936,11 @@
   // -------------------- Boot --------------------
   (function init() {
     document.getElementById('saveKey').textContent = navigator.platform.includes('Mac') ? '⌘S' : 'Ctrl+S';
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js");
+    }
+
     loadTheme();
     loadAutosave();
     startAutosave();
