@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Local Markdown Notes</title>
+
+  <!-- Favicon (Material 'Article' icon). Loaded from Google CDN. -->
+  <link rel="icon" href="https://www.gstatic.com/images/icons/material/system/1x/article_black_48dp.png" media="(prefers-color-scheme: light)" />
+  <link rel="icon" href="https://www.gstatic.com/images/icons/material/system/1x/article_white_48dp.png" media="(prefers-color-scheme: dark)" />
+
+  <style>
+    /* Theme tokens (resolved theme lives on body[data-theme]) */
+    :root {
+      --bg:#0b1020;
+      --surface:#0c1330;
+      --surface-2:#0e1531;
+      --panel:#121a33;
+      --panel-2:#1a2450;
+      --text:#e7ecff;
+      --muted:#a9b3da;
+      --accent:#6aa6ff;
+      --border:#26315f;
+      --shadow:rgba(0,0,0,.35);
+      --danger:#ff6a6a;
+      --danger-bg:#2a1420;
+      --danger-border:#5c2030;
+      --ok:#3ddc97;
+      --btn-bg:var(--panel-2);
+      --btn-border:var(--border);
+      --btn-text:var(--text);
+      --btn-primary-bg:var(--accent);
+      --btn-primary-border:var(--accent);
+      --btn-primary-text:#041027;
+      --code-bg:var(--surface-2);
+    }
+
+    body[data-theme="light"] {
+      --bg:#f6f8ff;
+      --surface:#ffffff;
+      --surface-2:#f0f3ff;
+      --panel:#ffffff;
+      --panel-2:#e7ecff;
+      --text:#0b1020;
+      --muted:#3a466b;
+      --accent:#2357ff;
+      --border:#cfd6ee;
+      --shadow:rgba(0,0,0,.15);
+      --danger:#c92a2a;
+      --danger-bg:#ffe7ea;
+      --danger-border:#f3b6bf;
+      --ok:#0f8a4c;
+      --btn-bg:#ffffff;
+      --btn-border:#cfd6ee;
+      --btn-text:#0b1020;
+      --btn-primary-bg:#2357ff;
+      --btn-primary-border:#2357ff;
+      --btn-primary-text:#ffffff;
+      --code-bg:#f0f3ff;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 10px 12px;
+      background: linear-gradient(180deg, var(--panel), var(--bg));
+      border-bottom: 1px solid var(--border);
+    }
+
+    header .spacer { flex: 1; }
+
+    button {
+      background: var(--btn-bg);
+      border: 1px solid var(--btn-border);
+      color: var(--btn-text);
+      padding: 7px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover { border-color: var(--accent); }
+    button.primary {
+      background: var(--btn-primary-bg);
+      border-color: var(--btn-primary-border);
+      color: var(--btn-primary-text);
+      font-weight: 600;
+    }
+    button.danger {
+      background: var(--danger-bg);
+      border-color: var(--danger-border);
+      color: var(--danger);
+    }
+
+    .hint { color: var(--muted); font-size: 12px; }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 320px 1fr 1fr;
+      min-height: 0;
+    }
+
+    aside {
+      border-right: 1px solid var(--border);
+      background: var(--surface);
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .aside-head {
+      padding: 10px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      background: var(--surface);
+    }
+
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+    .badge {
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.03);
+    }
+
+    select, input[type="text"], input[type="number"] {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 7px 10px;
+      border-radius: 8px;
+    }
+
+    select { cursor: pointer; }
+
+    .filelist { overflow: auto; padding: 6px; flex: 1; min-height: 0; }
+
+    .file {
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .file:hover { background: var(--panel); }
+    .file.active { background: var(--panel-2); border: 1px solid var(--border); }
+    .meta { font-size: 11px; color: var(--muted); }
+
+    .daypanel {
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .daypanel .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .daypanel .title { font-size: 12px; color: var(--muted); font-weight: 600; }
+    .daypanel .kv { display: flex; gap: 10px; flex-wrap: wrap; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 2px 8px;
+      color: var(--muted);
+      font-size: 12px;
+      background: rgba(0,0,0,.03);
+    }
+    .daypanel .event { font-size: 12px; color: var(--text); line-height: 1.35; }
+    .daypanel .event a { color: var(--accent); text-decoration: none; }
+    .daypanel .event a:hover { text-decoration: underline; }
+
+    .pane { min-height: 0; display: flex; flex-direction: column; }
+
+    .pane h2 {
+      margin: 0;
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    textarea {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      resize: none;
+      border: 0;
+      outline: none;
+      padding: 12px;
+      background: var(--bg);
+      color: var(--text);
+      font: 13px/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    #preview { flex: 1; min-height: 0; overflow: auto; padding: 12px; }
+    #preview code { background: var(--code-bg); padding: 2px 5px; border-radius: 6px; border: 1px solid var(--border); }
+    #preview pre { background: var(--code-bg); padding: 10px; border-radius: 10px; border: 1px solid var(--border); overflow: auto; }
+    #preview a { color: var(--accent); }
+    #preview ul, #preview ol { padding-left: 22px; }
+
+    #status {
+      padding: 8px 12px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      background: var(--surface);
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    kbd {
+      font: 11px ui-monospace, monospace;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      border-radius: 6px;
+      color: var(--muted);
+    }
+
+    /* Settings menu */
+    .menu { position: relative; display: inline-block; }
+    .menu-btn { display: flex; align-items: center; gap: 6px; }
+    .menu-panel {
+      position: absolute;
+      right: 0;
+      top: 42px;
+      min-width: 360px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 6px;
+      box-shadow: 0 10px 28px var(--shadow);
+      display: none;
+      z-index: 50;
+    }
+    .menu-panel.open { display: block; }
+    .menu-item {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 0;
+      color: var(--text);
+      padding: 10px 10px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .menu-item:hover { background: var(--panel); }
+    .menu-sep { height: 1px; background: var(--border); margin: 6px 4px; }
+    .menu-label { padding: 8px 10px; color: var(--muted); font-size: 12px; }
+    .menu-small { padding: 6px 10px; color: var(--muted); font-size: 12px; }
+    .settings-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 6px 10px; }
+    .settings-row label { color: var(--muted); font-size: 12px; }
+    .settings-row input[type="number"] { width: 92px; }
+
+    @media (max-width: 980px) {
+      main { grid-template-columns: 1fr; grid-template-rows: 320px 1fr 1fr; }
+      aside { border-right: 0; border-bottom: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Local Markdown Notes</strong>
+    <span class="hint">Single-file • markdown-it via CDN • OneDrive-friendly folder vault</span>
+    <span class="spacer"></span>
+
+    <div class="menu">
+      <button id="btnSettings" class="menu-btn" title="Settings"><span aria-hidden="true">⚙️</span><span class="hint" style="font-size:13px">Settings</span></button>
+      <div class="menu-panel" id="settingsPanel" role="menu" aria-label="Settings">
+        <div class="menu-label">Vault</div>
+        <button class="menu-item" id="btnPick">📁 Pick Notes Folder</button>
+        <button class="menu-item" id="btnForget">🧹 Forget Remembered Folder</button>
+        <div class="menu-small" id="rememberInfo">Remembering: (none)</div>
+
+        <div class="menu-sep"></div>
+        <div class="menu-label">Theme</div>
+        <div class="settings-row">
+          <label for="themeSelect">Theme</label>
+          <select id="themeSelect">
+            <option value="system">System</option>
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+          </select>
+        </div>
+        <div class="menu-small">System follows OS/browser theme. Stored locally.</div>
+
+        <div class="menu-sep"></div>
+        <div class="menu-label">Auto-save</div>
+        <div class="settings-row">
+          <label for="autosaveSec">Interval (seconds)</label>
+          <input id="autosaveSec" type="number" min="5" max="300" step="5" />
+          <button id="btnAutosaveApply" class="primary" style="padding:6px 10px">Apply</button>
+          <button id="btnAutosaveReset" style="padding:6px 10px">Reset</button>
+        </div>
+        <div class="menu-small">Range 5–300 seconds.</div>
+      </div>
+    </div>
+
+    <button id="btnNew">New</button>
+    <button id="btnSave" class="primary">Save (<span id="saveKey">Ctrl+S</span>)</button>
+    <button id="btnRename" title="Rename current note (F2)">Rename (F2)</button>
+    <button id="btnDelete" class="danger">Delete</button>
+  </header>
+
+  <main>
+    <aside>
+      <div class="aside-head">
+        <div class="row">
+          <span class="badge" id="folderBadge">No folder selected</span>
+          <span class="badge" id="countBadge">0 notes</span>
+        </div>
+        <div class="row">
+          <label class="hint" for="sortMode">Sort</label>
+          <select id="sortMode">
+            <option value="name">Name</option>
+            <option value="modified">Modified</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filelist" id="filelist"></div>
+
+      <div class="daypanel" id="dayPanel">
+        <div class="top">
+          <div class="title">Today</div>
+          <button id="btnOnThisDay" title="Pick another random event" style="padding:6px 8px">↻</button>
+        </div>
+        <div class="kv">
+          <span class="pill">Day <b id="doy">—</b></span>
+          <span class="pill">ISO week <b id="isoweek">—</b></span>
+        </div>
+        <div class="event" id="onThisDay">Loading “On this day”…</div>
+      </div>
+    </aside>
+
+    <section class="pane">
+      <h2>
+        <span>Editor</span>
+        <span class="hint" id="dirtyHint" style="display:none">●</span>
+      </h2>
+      <textarea id="editor" placeholder="Write Markdown here…"></textarea>
+    </section>
+
+    <section class="pane">
+      <h2>Preview</h2>
+      <div id="preview"></div>
+    </section>
+  </main>
+
+  <div id="status">
+    <span id="statusText">Open ⚙️ Settings → Pick Notes Folder. Tip: choose a folder inside OneDrive so notes sync.</span>
+    <span class="hint">Shortcuts: <kbd>Ctrl</kbd>+<kbd>S</kbd> save • <kbd>F2</kbd> rename</span>
+  </div>
+
+  <!-- markdown-it from CDN (UMD build exposes window.markdownit) -->
+  <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
+
+  <script>
+  // -------------------- Helpers --------------------
+  function escapeHtml(s) {
+    return (s || '').replace(/[&<>"']/g, function(c) {
+      return ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      })[c];
+    });
+  }
+
+  function pad2(n) { return String(n).padStart(2, '0'); }
+  function clamp(n, min, max) { return Math.min(max, Math.max(min, n)); }
+
+  // -------------------- Theme (system/dark/light) --------------------
+  const LS_THEME = 'mdnotes_theme';
+  const themeSelect = document.getElementById('themeSelect');
+  let systemMql = null;
+  let systemListener = null;
+
+  function resolveSystemTheme() {
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+
+  function detachSystemListener() {
+    if (systemMql && systemListener) {
+      try { systemMql.removeEventListener('change', systemListener); }
+      catch (e) { try { systemMql.removeListener(systemListener); } catch (e2) {} }
+    }
+    systemMql = null;
+    systemListener = null;
+  }
+
+  function attachSystemListener() {
+    detachSystemListener();
+    if (!window.matchMedia) return;
+    systemMql = window.matchMedia('(prefers-color-scheme: dark)');
+    systemListener = function() { document.body.dataset.theme = resolveSystemTheme(); };
+    try { systemMql.addEventListener('change', systemListener); }
+    catch (e) { try { systemMql.addListener(systemListener); } catch (e2) {} }
+  }
+
+  function applyThemePref(pref) {
+    const p = (pref === 'light' || pref === 'dark' || pref === 'system') ? pref : 'system';
+    localStorage.setItem(LS_THEME, p);
+    if (themeSelect) themeSelect.value = p;
+
+    if (p === 'system') {
+      document.body.dataset.theme = resolveSystemTheme();
+      attachSystemListener();
+    } else {
+      detachSystemListener();
+      document.body.dataset.theme = p;
+    }
+  }
+
+  function loadTheme() {
+    applyThemePref(localStorage.getItem(LS_THEME) || 'system');
+  }
+
+  // -------------------- Settings menu --------------------
+  const settingsBtn = document.getElementById('btnSettings');
+  const settingsPanel = document.getElementById('settingsPanel');
+  function closeSettings() { settingsPanel.classList.remove('open'); }
+  function toggleSettings() { settingsPanel.classList.toggle('open'); }
+  settingsBtn.addEventListener('click', function(e) { e.stopPropagation(); toggleSettings(); });
+  settingsPanel.addEventListener('click', function(e) { e.stopPropagation(); });
+  window.addEventListener('click', function() { closeSettings(); });
+  window.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSettings(); });
+  if (themeSelect) themeSelect.addEventListener('change', function() { applyThemePref(themeSelect.value); });
+
+  // -------------------- Today panel (local date) --------------------
+  const elDoy = document.getElementById('doy');
+  const elIsoWeek = document.getElementById('isoweek');
+  const elOnThisDay = document.getElementById('onThisDay');
+  const btnOnThisDay = document.getElementById('btnOnThisDay');
+  let cachedOnThisDay = { key: null, events: [] };
+
+  function dayOfYearLocal(d) {
+    const start = new Date(d.getFullYear(), 0, 0);
+    const diff = d - start;
+    return Math.floor(diff / 86400000);
+  }
+
+  function isoWeekLocal(d) {
+    // ISO week algorithm (uses UTC to avoid DST issues, based on local date components)
+    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    const dayNum = date.getUTCDay() || 7; // Mon=1..Sun=7
+    date.setUTCDate(date.getUTCDate() + 4 - dayNum); // shift to Thursday
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+    return { year: date.getUTCFullYear(), week: weekNo };
+  }
+
+  function wikiTitleToUrl(title) {
+    return 'https://en.wikipedia.org/wiki/' + encodeURIComponent((title || '').replace(/ /g, '_'));
+  }
+
+  function pickRandomEvent() {
+    const arr = cachedOnThisDay.events || [];
+    if (!arr.length) {
+      elOnThisDay.textContent = 'No “On this day” data available.';
+      return;
+    }
+
+    const e = arr[Math.floor(Math.random() * arr.length)];
+    const year = e.year ? String(e.year) : '';
+    const text = e.text || '';
+
+    let url = null;
+    let label = null;
+    try {
+      const p = (e.pages && e.pages[0]) ? e.pages[0] : null;
+      if (p) {
+        url = p.content_urls && p.content_urls.desktop && p.content_urls.desktop.page ? p.content_urls.desktop.page : null;
+        label = p.title || null;
+        if (!url && p.title) url = wikiTitleToUrl(p.title);
+      }
+    } catch (err) {}
+
+    if (url) {
+      const safeLabel = escapeHtml(label || 'Wikipedia');
+      elOnThisDay.innerHTML = '<b>' + escapeHtml(year) + '</b> — ' + escapeHtml(text)
+        + ' <span class="hint">·</span> <a href="' + url + '" target="_blank" rel="noopener">' + safeLabel + '</a>';
+    } else {
+      elOnThisDay.innerHTML = '<b>' + escapeHtml(year) + '</b> — ' + escapeHtml(text);
+    }
+  }
+
+  async function loadOnThisDay(forceFetch) {
+    const now = new Date();
+    const mm = pad2(now.getMonth() + 1);
+    const dd = pad2(now.getDate());
+    const key = mm + '-' + dd;
+
+    elDoy.textContent = String(dayOfYearLocal(now));
+    const iso = isoWeekLocal(now);
+    elIsoWeek.textContent = iso.year + '-W' + String(iso.week).padStart(2, '0');
+
+    if (!forceFetch && cachedOnThisDay.key === key && cachedOnThisDay.events.length) {
+      pickRandomEvent();
+      return;
+    }
+
+    elOnThisDay.textContent = 'Loading “On this day”…';
+
+    // Wikimedia Feed API: /feed/v1/wikipedia/{language}/onthisday/{type}/{MM}/{DD}
+    const url = 'https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/events/' + mm + '/' + dd;
+
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      const events = Array.isArray(data && data.events) ? data.events : [];
+      cachedOnThisDay = { key: key, events: events };
+      pickRandomEvent();
+    } catch (e) {
+      elOnThisDay.textContent = 'Could not load “On this day” (offline or blocked).';
+    }
+  }
+
+  function scheduleNextMidnightRefresh() {
+    const now = new Date();
+    const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 2);
+    const ms = Math.max(1000, next - now);
+    setTimeout(function() { loadOnThisDay(true); scheduleNextMidnightRefresh(); }, ms);
+  }
+
+  btnOnThisDay.addEventListener('click', function() {
+    if (cachedOnThisDay.events && cachedOnThisDay.events.length) pickRandomEvent();
+    else loadOnThisDay(true);
+  });
+
+  // -------------------- Markdown rendering --------------------
+  function normalizeNewlines(text) {
+    return (text || '').replace(/\r\n?/g, '\n');
+  }
+
+  function renderMarkdown(text) {
+    if (window.markdownit) {
+      const md = window.markdownit({ html: false, linkify: true, typographer: true });
+      return md.render(text || '');
+    }
+    const t = normalizeNewlines(text);
+    return '<pre><code>' + escapeHtml(t) + '</code></pre>';
+  }
+
+  // -------------------- Notes vault (File System Access API) --------------------
+  const DB_NAME = 'mdnotes-db';
+  const DB_STORE = 'handles';
+  const HANDLE_KEY = 'vaultDirHandle';
+  const LS_FLAG = 'mdnotes_hasVault';
+
+  let dirHandle = null;
+  let currentFileHandle = null;
+  let currentName = null;
+  let dirty = false;
+
+  const elFileList = document.getElementById('filelist');
+  const elEditor = document.getElementById('editor');
+  const elPreview = document.getElementById('preview');
+  const elFolderBadge = document.getElementById('folderBadge');
+  const elCountBadge = document.getElementById('countBadge');
+  const elDirtyHint = document.getElementById('dirtyHint');
+  const elStatus = document.getElementById('statusText');
+
+  const btnPick = document.getElementById('btnPick');
+  const btnForget = document.getElementById('btnForget');
+  const btnNew = document.getElementById('btnNew');
+  const btnSave = document.getElementById('btnSave');
+  const btnRename = document.getElementById('btnRename');
+  const btnDelete = document.getElementById('btnDelete');
+  const sortMode = document.getElementById('sortMode');
+
+  const autosaveSecInput = document.getElementById('autosaveSec');
+  const btnAutosaveApply = document.getElementById('btnAutosaveApply');
+  const btnAutosaveReset = document.getElementById('btnAutosaveReset');
+  const LS_AUTOSAVE_SEC = 'mdnotes_autosave_sec';
+  const AUTOSAVE_DEFAULT = 10;
+  const AUTOSAVE_MIN = 5;
+  const AUTOSAVE_MAX = 300;
+  let autosaveTimer = null;
+  let autosaveSec = AUTOSAVE_DEFAULT;
+
+  function setStatus(msg) { elStatus.textContent = msg; }
+  function setRememberInfo(msg) { document.getElementById('rememberInfo').textContent = msg; }
+
+  function supportsFSA() {
+    return ('showDirectoryPicker' in window) && ('FileSystemFileHandle' in window);
+  }
+
+  function markDirty(state) {
+    dirty = !!state;
+    elDirtyHint.style.display = 'inline';
+    elDirtyHint.textContent = dirty ? '● unsaved' : '● saved';
+    elDirtyHint.style.color = dirty ? 'var(--danger)' : 'var(--ok)';
+  }
+
+  function renderAll() {
+    elPreview.innerHTML = renderMarkdown(elEditor.value);
+  }
+
+  function openDB() {
+    return new Promise(function(resolve, reject) {
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = function() {
+        const db = req.result;
+        if (!db.objectStoreNames.contains(DB_STORE)) db.createObjectStore(DB_STORE);
+      };
+      req.onsuccess = function() { resolve(req.result); };
+      req.onerror = function() { reject(req.error); };
+    });
+  }
+
+  async function idbSet(key, value) {
+    const db = await openDB();
+    return new Promise(function(resolve, reject) {
+      const tx = db.transaction(DB_STORE, 'readwrite');
+      tx.objectStore(DB_STORE).put(value, key);
+      tx.oncomplete = function() { db.close(); resolve(true); };
+      tx.onerror = function() { db.close(); reject(tx.error); };
+    });
+  }
+
+  async function idbGet(key) {
+    const db = await openDB();
+    return new Promise(function(resolve, reject) {
+      const tx = db.transaction(DB_STORE, 'readonly');
+      const req = tx.objectStore(DB_STORE).get(key);
+      req.onsuccess = function() { db.close(); resolve(req.result); };
+      req.onerror = function() { db.close(); reject(req.error); };
+    });
+  }
+
+  async function idbDel(key) {
+    const db = await openDB();
+    return new Promise(function(resolve, reject) {
+      const tx = db.transaction(DB_STORE, 'readwrite');
+      tx.objectStore(DB_STORE).delete(key);
+      tx.oncomplete = function() { db.close(); resolve(true); };
+      tx.onerror = function() { db.close(); reject(tx.error); };
+    });
+  }
+
+  async function ensurePermission(handle, mode) {
+    const opts = { mode: mode || 'readwrite' };
+    if ((await handle.queryPermission(opts)) === 'granted') return true;
+    if ((await handle.requestPermission(opts)) === 'granted') return true;
+    return false;
+  }
+
+  async function rememberFolder(handle) {
+    try {
+      await idbSet(HANDLE_KEY, handle);
+      localStorage.setItem(LS_FLAG, '1');
+      setRememberInfo('Remembering: yes');
+    } catch (e) {
+      localStorage.removeItem(LS_FLAG);
+      setRememberInfo('Remembering: failed');
+    }
+  }
+
+  async function forgetFolder() {
+    try { await idbDel(HANDLE_KEY); } catch (e) {}
+    localStorage.removeItem(LS_FLAG);
+    setRememberInfo('Remembering: (none)');
+    dirHandle = null;
+    currentFileHandle = null;
+    currentName = null;
+    elFolderBadge.textContent = 'No folder selected';
+    elFileList.innerHTML = '';
+    elCountBadge.textContent = '0 notes';
+    setStatus('Forgot folder. Use Settings → Pick Notes Folder.');
+  }
+
+  function loadAutosave() {
+    const raw = localStorage.getItem(LS_AUTOSAVE_SEC);
+    const n = raw ? parseInt(raw, 10) : AUTOSAVE_DEFAULT;
+    autosaveSec = clamp(isFinite(n) ? n : AUTOSAVE_DEFAULT, AUTOSAVE_MIN, AUTOSAVE_MAX);
+    autosaveSecInput.value = String(autosaveSec);
+  }
+
+  function startAutosave() {
+    if (autosaveTimer) clearInterval(autosaveTimer);
+    autosaveTimer = setInterval(async function() {
+      if (!dirty) return;
+      if (!dirHandle || !currentFileHandle) return;
+      try {
+        const ok = await ensurePermission(currentFileHandle, 'readwrite');
+        if (!ok) return;
+        const content = normalizeNewlines(elEditor.value);
+        const writable = await currentFileHandle.createWritable();
+        await writable.write(content);
+        await writable.close();
+        markDirty(false);
+        setStatus('Auto-saved ' + currentName + ' (' + new Date().toLocaleTimeString() + ')');
+        await refreshList();
+      } catch (e) {}
+    }, autosaveSec * 1000);
+  }
+
+  async function pickFolder() {
+    if (!supportsFSA()) {
+      alert('Use Chrome or Edge (File System Access API required).');
+      return;
+    }
+    closeSettings();
+    dirHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    const ok = await ensurePermission(dirHandle, 'readwrite');
+    if (!ok) { setStatus('Permission denied for folder.'); return; }
+    await rememberFolder(dirHandle);
+    elFolderBadge.textContent = 'Folder selected';
+    setStatus('Folder ready.');
+    await refreshList();
+  }
+
+  async function tryRestoreFolder() {
+    if (!supportsFSA()) return false;
+    if (localStorage.getItem(LS_FLAG) !== '1') return false;
+    try {
+      const handle = await idbGet(HANDLE_KEY);
+      if (!handle) { localStorage.removeItem(LS_FLAG); return false; }
+      const ok = await ensurePermission(handle, 'readwrite');
+      if (!ok) { setRememberInfo('Remembering: yes (permission needed)'); return false; }
+      dirHandle = handle;
+      elFolderBadge.textContent = 'Folder selected';
+      setRememberInfo('Remembering: yes');
+      await refreshList();
+      setStatus('Re-opened previous folder.');
+      return true;
+    } catch (e) {
+      localStorage.removeItem(LS_FLAG);
+      return false;
+    }
+  }
+
+  async function listMdFiles() {
+    const out = [];
+    for await (const entry of dirHandle.values()) {
+      if (entry.kind === 'file' && entry.name.toLowerCase().endsWith('.md')) out.push(entry);
+    }
+    return out;
+  }
+
+  async function refreshList() {
+    if (!dirHandle) {
+      elFileList.innerHTML = '';
+      elCountBadge.textContent = '0 notes';
+      return;
+    }
+
+    const files = await listMdFiles();
+    const metas = [];
+    for (const fh of files) {
+      const f = await fh.getFile();
+      metas.push({ name: fh.name, handle: fh, modified: f.lastModified || 0 });
+    }
+
+    metas.sort(function(a, b) {
+      if (sortMode.value === 'modified') return (b.modified - a.modified);
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    elFileList.innerHTML = '';
+    elCountBadge.textContent = String(metas.length) + ' notes';
+
+    for (const m of metas) {
+      const div = document.createElement('div');
+      div.className = 'file' + (currentName === m.name ? ' active' : '');
+      const when = m.modified ? new Date(m.modified).toLocaleString() : '';
+      div.innerHTML = '<span>📝</span>'
+        + '<div style="flex:1;min-width:0">'
+        + '<div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + escapeHtml(m.name) + '</div>'
+        + '<div class="meta">' + escapeHtml(when) + '</div>'
+        + '</div>';
+      div.addEventListener('click', function() { openFile(m.handle, m.name); });
+      elFileList.appendChild(div);
+    }
+  }
+
+  async function openFile(handle, name) {
+    if (dirty && !confirm('You have unsaved changes. Discard and open another file?')) return;
+    const ok = await ensurePermission(handle, 'readwrite');
+    if (!ok) { setStatus('Permission denied for file.'); return; }
+    const file = await handle.getFile();
+    const text = await file.text();
+
+    currentFileHandle = handle;
+    currentName = name;
+    elEditor.value = normalizeNewlines(text);
+    markDirty(false);
+    renderAll();
+    await refreshList();
+    setStatus('Opened ' + name);
+  }
+
+  async function newNote() {
+    if (dirty && !confirm('You have unsaved changes. Discard and create new note?')) return;
+    currentFileHandle = null;
+    currentName = null;
+    elEditor.value = '# New note\n\n- Item\n  - Sub item\n\nStart writing…\n';
+    markDirty(true);
+    renderAll();
+    await refreshList();
+    setStatus('New note (not saved yet).');
+  }
+
+  async function saveNote() {
+    if (!dirHandle) { await pickFolder(); if (!dirHandle) return; }
+
+    if (!currentFileHandle) {
+      let name = prompt('Note name (without extension):', 'New Note');
+      if (!name) return;
+      name = name.replace(/[\\/:*?"<>|]+/g, '-').trim();
+      if (!name) return;
+      if (!name.toLowerCase().endsWith('.md')) name += '.md';
+      currentFileHandle = await dirHandle.getFileHandle(name, { create: true });
+      currentName = name;
+    }
+
+    const ok = await ensurePermission(currentFileHandle, 'readwrite');
+    if (!ok) { setStatus('Permission denied for save.'); return; }
+
+    const content = normalizeNewlines(elEditor.value);
+    const writable = await currentFileHandle.createWritable();
+    await writable.write(content);
+    await writable.close();
+
+    markDirty(false);
+    await refreshList();
+    setStatus('Saved ' + currentName);
+  }
+
+  async function renameNote() {
+    if (!dirHandle || !currentFileHandle || !currentName) { alert('Open a note first.'); return; }
+    let newName = prompt('Rename to (without extension):', currentName.replace(/\.md$/i, ''));
+    if (!newName) return;
+    newName = newName.replace(/[\\/:*?"<>|]+/g, '-').trim();
+    if (!newName.toLowerCase().endsWith('.md')) newName += '.md';
+
+    const content = normalizeNewlines(elEditor.value);
+    const newHandle = await dirHandle.getFileHandle(newName, { create: true });
+    const writable = await newHandle.createWritable();
+    await writable.write(content);
+    await writable.close();
+
+    await dirHandle.removeEntry(currentName);
+    currentFileHandle = newHandle;
+    currentName = newName;
+    markDirty(false);
+    await refreshList();
+    setStatus('Renamed to ' + newName);
+  }
+
+  async function deleteNote() {
+    if (!dirHandle || !currentName) { alert('Open a note first.'); return; }
+    if (!confirm('Delete ' + currentName + '? This cannot be undone.')) return;
+    await dirHandle.removeEntry(currentName);
+    currentFileHandle = null;
+    currentName = null;
+    elEditor.value = '';
+    renderAll();
+    markDirty(false);
+    await refreshList();
+    setStatus('Deleted note.');
+  }
+
+  // -------------------- Wire events --------------------
+  elEditor.addEventListener('input', function() { markDirty(true); renderAll(); });
+
+  btnPick.addEventListener('click', pickFolder);
+  btnForget.addEventListener('click', function() { closeSettings(); forgetFolder(); });
+
+  btnNew.addEventListener('click', newNote);
+  btnSave.addEventListener('click', saveNote);
+  btnRename.addEventListener('click', renameNote);
+  btnDelete.addEventListener('click', deleteNote);
+
+  sortMode.addEventListener('change', function() { refreshList(); });
+
+  window.addEventListener('keydown', function(e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); saveNote(); }
+    if (e.key === 'F2') { e.preventDefault(); renameNote(); }
+  });
+
+  // Autosave UI
+  function applyAutosaveFromUI() {
+    const n = parseInt(autosaveSecInput.value, 10);
+    autosaveSec = clamp(isFinite(n) ? n : AUTOSAVE_DEFAULT, AUTOSAVE_MIN, AUTOSAVE_MAX);
+    localStorage.setItem(LS_AUTOSAVE_SEC, String(autosaveSec));
+    autosaveSecInput.value = String(autosaveSec);
+    startAutosave();
+    closeSettings();
+    setStatus('Auto-save set to ' + autosaveSec + 's');
+  }
+
+  btnAutosaveApply.addEventListener('click', applyAutosaveFromUI);
+  btnAutosaveReset.addEventListener('click', function() {
+    autosaveSec = AUTOSAVE_DEFAULT;
+    localStorage.setItem(LS_AUTOSAVE_SEC, String(autosaveSec));
+    autosaveSecInput.value = String(autosaveSec);
+    startAutosave();
+    closeSettings();
+    setStatus('Auto-save reset to ' + autosaveSec + 's');
+  });
+
+  // -------------------- Boot --------------------
+  (function init() {
+    document.getElementById('saveKey').textContent = navigator.platform.includes('Mac') ? '⌘S' : 'Ctrl+S';
+    loadTheme();
+    loadAutosave();
+    startAutosave();
+
+    loadOnThisDay(false);
+    scheduleNextMidnightRefresh();
+
+    if (!supportsFSA()) {
+      elFolderBadge.textContent = 'Limited mode';
+      setRememberInfo('Remembering: unsupported');
+      setStatus('Use Chrome/Edge for folder write access.');
+      return;
+    }
+
+    const had = localStorage.getItem(LS_FLAG) === '1';
+    setRememberInfo(had ? 'Remembering: yes (restoring...)' : 'Remembering: (none)');
+    tryRestoreFolder();
+    refreshList();
+
+    renderAll();
+  })();
+
+  </script>
+</body>
+</html>
