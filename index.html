@@ -9,59 +9,61 @@
   <link rel="icon" href="https://www.gstatic.com/images/icons/material/system/1x/article_black_48dp.png" media="(prefers-color-scheme: light)" />
   <link rel="icon" href="https://www.gstatic.com/images/icons/material/system/1x/article_white_48dp.png" media="(prefers-color-scheme: dark)" />
   <style>
-    /* Theme tokens (resolved theme lives on body[data-theme]) */
+    /* Fluent UI Theme Tokens */
     :root {
-      --bg:#0b1020;
-      --surface:#0c1330;
-      --surface-2:#0e1531;
-      --panel:#121a33;
-      --panel-2:#1a2450;
-      --text:#e7ecff;
-      --muted:#a9b3da;
-      --accent:#6aa6ff;
-      --border:#26315f;
-      --shadow:rgba(0,0,0,.35);
-      --danger:#ff6a6a;
-      --danger-bg:#2a1420;
-      --danger-border:#5c2030;
-      --ok:#3ddc97;
-      --btn-bg:var(--panel-2);
-      --btn-border:var(--border);
-      --btn-text:var(--text);
-      --btn-primary-bg:var(--accent);
-      --btn-primary-border:var(--accent);
-      --btn-primary-text:#041027;
-      --code-bg:var(--surface-2);
+      /* Dark mode (default) */
+      --bg: #1a1a1a;
+      --surface: #252525;
+      --surface-2: #2e2e2e;
+      --surface-3: #373737;
+      --panel: #2d2d2d;
+      --panel-2: #3a3a3a;
+      --text: #ffffff;
+      --text-secondary: #e1e1e1;
+      --muted: #a0a0a0;
+      --accent: #0078d4;
+      --accent-hover: #107c10;
+      --border: #3e3e3e;
+      --border-subtle: #303030;
+      --shadow: rgba(0, 0, 0, 0.3);
+      --shadow-subtle: rgba(0, 0, 0, 0.15);
+      --danger: #f4454c;
+      --danger-bg: #5c2e2e;
+      --danger-hover: #c50f1f;
+      --ok: #107c10;
+      --code-bg: #1e1e1e;
+      --code-border: #464646;
     }
 
     body[data-theme="light"] {
-      --bg:#f6f8ff;
-      --surface:#ffffff;
-      --surface-2:#f0f3ff;
-      --panel:#ffffff;
-      --panel-2:#e7ecff;
-      --text:#0b1020;
-      --muted:#3a466b;
-      --accent:#2357ff;
-      --border:#cfd6ee;
-      --shadow:rgba(0,0,0,.15);
-      --danger:#c92a2a;
-      --danger-bg:#ffe7ea;
-      --danger-border:#f3b6bf;
-      --ok:#0f8a4c;
-      --btn-bg:#ffffff;
-      --btn-border:#cfd6ee;
-      --btn-text:#0b1020;
-      --btn-primary-bg:#2357ff;
-      --btn-primary-border:#2357ff;
-      --btn-primary-text:#ffffff;
-      --code-bg:#f0f3ff;
+      --bg: #ffffff;
+      --surface: #f3f3f3;
+      --surface-2: #efefef;
+      --surface-3: #e8e8e8;
+      --panel: #ffffff;
+      --panel-2: #f7f7f7;
+      --text: #242424;
+      --text-secondary: #3b3b3b;
+      --muted: #737373;
+      --accent: #0078d4;
+      --accent-hover: #486991;
+      --border: #d0d0d0;
+      --border-subtle: #e1e1e1;
+      --shadow: rgba(0, 0, 0, 0.08);
+      --shadow-subtle: rgba(0, 0, 0, 0.04);
+      --danger: #c50f1f;
+      --danger-bg: #fed9cc;
+      --danger-hover: #a4373a;
+      --ok: #107c10;
+      --code-bg: #f5f5f5;
+      --code-border: #d9d9d9;
     }
 
     * { box-sizing: border-box; }
+    
     body {
       margin: 0;
-      font: 14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+      font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
       background: var(--bg);
       color: var(--text);
       height: 100vh;
@@ -69,50 +71,117 @@
       flex-direction: column;
     }
 
+    /* Header / Toolbar */
     header {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      padding: 12px 16px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-subtle);
+      box-shadow: 0 1px 4px var(--shadow-subtle);
+    }
+
+    .header-left {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    header > strong {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .header-center {
       display: flex;
       gap: 8px;
       align-items: center;
-      flex-wrap: wrap;
-      padding: 10px 12px;
-      background: linear-gradient(180deg, var(--panel), var(--bg));
-      border-bottom: 1px solid var(--border);
+    }
+
+    .header-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-left: auto;
     }
 
     header .spacer { flex: 1; }
 
+    /* Buttons - Fluent UI Style */
     button {
-      background: var(--btn-bg);
-      border: 1px solid var(--btn-border);
-      color: var(--btn-text);
-      padding: 7px 10px;
-      border-radius: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 4px;
       cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      user-select: none;
     }
-    button:hover { border-color: var(--accent); }
+
+    button:hover {
+      background: var(--surface-3);
+      border-color: var(--border);
+    }
+
+    button:active {
+      background: var(--panel-2);
+      border-color: var(--accent);
+    }
+
+    button:focus {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
+
     button.primary {
-      background: var(--btn-primary-bg);
-      border-color: var(--btn-primary-border);
-      color: var(--btn-primary-text);
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
       font-weight: 600;
     }
-    button.danger {
-      background: var(--danger-bg);
-      border-color: var(--danger-border);
-      color: var(--danger);
+
+    button.primary:hover {
+      background: #106ebe;
+      border-color: #106ebe;
     }
 
-    .hint { color: var(--muted); font-size: 12px; }
+    button.primary:active {
+      background: #0d5a96;
+      border-color: #0d5a96;
+    }
 
+    button.danger {
+      color: var(--danger);
+      background: transparent;
+      border-color: var(--danger);
+    }
+
+    button.danger:hover {
+      background: var(--danger);
+      color: #ffffff;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* Main Layout */
     main {
       flex: 1;
       display: grid;
       grid-template-columns: 320px 1fr 1fr;
       min-height: 0;
+      gap: 0;
     }
 
+    /* Sidebar */
     aside {
-      border-right: 1px solid var(--border);
+      border-right: 1px solid var(--border-subtle);
       background: var(--surface);
       min-height: 0;
       display: flex;
@@ -120,90 +189,171 @@
     }
 
     .aside-head {
-      padding: 10px;
-      border-bottom: 1px solid var(--border);
+      padding: 12px;
+      border-bottom: 1px solid var(--border-subtle);
       display: grid;
       grid-template-columns: 1fr;
-      gap: 8px;
+      gap: 10px;
       background: var(--surface);
     }
 
-    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
 
     .badge {
       font-size: 11px;
       color: var(--muted);
       border: 1px solid var(--border);
-      padding: 1px 6px;
-      border-radius: 999px;
-      background: rgba(0,0,0,.03);
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: var(--surface-2);
+      font-weight: 500;
     }
 
     select, input[type="text"], input[type="number"] {
       background: var(--surface-2);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 7px 10px;
-      border-radius: 8px;
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    select:hover, input[type="text"]:hover, input[type="number"]:hover {
+      border-color: var(--accent);
+    }
+
+    select:focus, input[type="text"]:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.1);
     }
 
     select { cursor: pointer; }
 
-    .filelist { overflow: auto; padding: 6px; flex: 1; min-height: 0; }
+    .filelist {
+      overflow: auto;
+      padding: 8px;
+      flex: 1;
+      min-height: 0;
+    }
 
     .file {
-      padding: 8px 10px;
-      border-radius: 8px;
+      padding: 10px 12px;
+      border-radius: 4px;
       cursor: pointer;
       display: flex;
       gap: 8px;
       align-items: center;
+      transition: all 0.15s ease;
+      margin-bottom: 2px;
     }
 
-    .file:hover { background: var(--panel); }
-    .file.active { background: var(--panel-2); border: 1px solid var(--border); }
-    .meta { font-size: 11px; color: var(--muted); }
+    .file:hover {
+      background: var(--panel);
+    }
 
+    .file.active {
+      background: var(--accent);
+      color: #ffffff;
+    }
+
+    .file.active .meta {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .meta {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Day Panel */
     .daypanel {
-      border-top: 1px solid var(--border);
+      border-top: 1px solid var(--border-subtle);
       background: var(--surface);
-      padding: 10px;
+      padding: 12px;
       display: flex;
       flex-direction: column;
+      gap: 10px;
+    }
+
+    .daypanel .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 8px;
     }
 
-    .daypanel .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-    .daypanel .title { font-size: 12px; color: var(--muted); font-weight: 600; }
-    .daypanel .kv { display: flex; gap: 10px; flex-wrap: wrap; }
+    .daypanel .title {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .daypanel .kv {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
     .pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 2px 8px;
+      border-radius: 4px;
+      padding: 6px 10px;
       color: var(--muted);
       font-size: 12px;
-      background: rgba(0,0,0,.03);
+      background: var(--surface-2);
+      font-weight: 500;
     }
-    .daypanel .event { font-size: 12px; color: var(--text); line-height: 1.35; }
-    .daypanel .event a { color: var(--accent); text-decoration: none; }
-    .daypanel .event a:hover { text-decoration: underline; }
 
-    .pane { min-height: 0; display: flex; flex-direction: column; }
+    .daypanel .event {
+      font-size: 12px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .daypanel .event a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .daypanel .event a:hover {
+      text-decoration: underline;
+    }
+
+    /* Editor & Preview Panes */
+    .pane {
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
 
     .pane h2 {
       margin: 0;
-      padding: 10px 12px;
+      padding: 12px 16px;
       font-size: 13px;
+      font-weight: 600;
       color: var(--muted);
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--border-subtle);
       background: var(--surface);
       display: flex;
       gap: 8px;
       align-items: center;
       justify-content: space-between;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     textarea {
@@ -213,127 +363,271 @@
       resize: none;
       border: 0;
       outline: none;
-      padding: 12px;
+      padding: 16px;
       background: var(--bg);
       color: var(--text);
-      font: 13px/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font: 13px/1.6 ui-monospace, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
     }
 
-    #preview { flex: 1; min-height: 0; overflow: auto; padding: 12px; }
-    #preview code { background: var(--code-bg); padding: 2px 5px; border-radius: 6px; border: 1px solid var(--border); }
-    #preview pre { background: var(--code-bg); padding: 10px; border-radius: 10px; border: 1px solid var(--border); overflow: auto; }
-    #preview a { color: var(--accent); }
-    #preview ul, #preview ol { padding-left: 22px; }
+    #preview {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 16px;
+      background: var(--bg);
+    }
 
+    #preview code {
+      background: var(--code-bg);
+      color: var(--text-secondary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid var(--code-border);
+      font-family: ui-monospace, 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      font-size: 12px;
+    }
+
+    #preview pre {
+      background: var(--code-bg);
+      border: 1px solid var(--code-border);
+      border-radius: 6px;
+      padding: 12px 16px;
+      overflow: auto;
+      font-size: 12px;
+    }
+
+    #preview pre code {
+      background: transparent;
+      border: none;
+      padding: 0;
+      font-size: inherit;
+    }
+
+    #preview a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    #preview a:hover {
+      text-decoration: underline;
+    }
+
+    #preview ul, #preview ol {
+      padding-left: 24px;
+      margin: 8px 0;
+    }
+
+    #preview h1, #preview h2, #preview h3, #preview h4, #preview h5, #preview h6 {
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    #preview h1 { font-size: 28px; }
+    #preview h2 { font-size: 24px; }
+    #preview h3 { font-size: 20px; }
+    #preview h4 { font-size: 18px; }
+    #preview h5 { font-size: 16px; }
+    #preview h6 { font-size: 14px; }
+
+    /* Status Bar */
     #status {
-      padding: 8px 12px;
-      border-top: 1px solid var(--border);
+      padding: 10px 16px;
+      border-top: 1px solid var(--border-subtle);
       color: var(--muted);
       background: var(--surface);
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
+      font-size: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .status-shortcuts {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-left: auto;
     }
 
     kbd {
       font: 11px ui-monospace, monospace;
       background: var(--surface-2);
       border: 1px solid var(--border);
-      padding: 2px 6px;
-      border-radius: 6px;
+      padding: 3px 7px;
+      border-radius: 3px;
       color: var(--muted);
+      font-weight: 500;
     }
 
-    /* Settings menu */
-    .menu { position: relative; display: inline-block; }
-    .menu-btn { display: flex; align-items: center; gap: 6px; }
+    /* Theme Toggle Button */
+    .theme-toggle {
+      min-width: auto;
+    }
+
+    /* Settings Menu - Fluent UI Callout Style */
+    .menu {
+      position: relative;
+      display: inline-block;
+    }
+
+    .menu-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
     .menu-panel {
       position: absolute;
       right: 0;
-      top: 42px;
+      top: calc(100% + 8px);
       min-width: 360px;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 6px;
-      box-shadow: 0 10px 28px var(--shadow);
+      border-radius: 6px;
+      padding: 8px;
+      box-shadow: 0 8px 32px var(--shadow);
       display: none;
       z-index: 50;
     }
-    .menu-panel.open { display: block; }
+
+    .menu-panel.open {
+      display: block;
+    }
+
     .menu-item {
       width: 100%;
       text-align: left;
       background: transparent;
       border: 0;
-      color: var(--text);
-      padding: 10px 10px;
-      border-radius: 10px;
+      color: var(--accent);
+      padding: 10px 12px;
+      border-radius: 4px;
       cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s ease;
     }
-    .menu-item:hover { background: var(--panel); }
-    .menu-sep { height: 1px; background: var(--border); margin: 6px 4px; }
-    .menu-label { padding: 8px 10px; color: var(--muted); font-size: 12px; }
-    .menu-small { padding: 6px 10px; color: var(--muted); font-size: 12px; }
-    .settings-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 6px 10px; }
-    .settings-row label { color: var(--muted); font-size: 12px; }
-    .settings-row input[type="number"] { width: 92px; }
 
+    .menu-item:hover {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .menu-item:active {
+      background: var(--surface-3);
+    }
+
+    .menu-sep {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 8px 4px;
+    }
+
+    .menu-label {
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .menu-small {
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .settings-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 8px 12px;
+    }
+
+    .settings-row label {
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .settings-row input[type="number"] {
+      width: 92px;
+    }
+
+    /* Responsive Design */
     @media (max-width: 980px) {
-      main { grid-template-columns: 1fr; grid-template-rows: 320px 1fr 1fr; }
-      aside { border-right: 0; border-bottom: 1px solid var(--border); }
+      main {
+        grid-template-columns: 1fr;
+        grid-template-rows: 320px 1fr 1fr;
+      }
+      aside {
+        border-right: 0;
+        border-bottom: 1px solid var(--border-subtle);
+      }
     }
   </style>
 </head>
 <body>
   <header>
-    <strong>Local Markdown Notes</strong>
-    <span class="hint">Single-file • markdown-it via CDN • OneDrive-friendly folder vault</span>
-    <span class="spacer"></span>
-
-    <div class="menu">
-      <button id="btnSettings" class="menu-btn" title="Settings"><span aria-hidden="true">⚙️</span><span class="hint" style="font-size:13px">Settings</span></button>
-      <div class="menu-panel" id="settingsPanel" role="menu" aria-label="Settings">
-        <div class="menu-label">Vault</div>
-        <button class="menu-item" id="btnPick">📁 Pick Notes Folder</button>
-        <button class="menu-item" id="btnForget">🧹 Forget Remembered Folder</button>
-        <div class="menu-small" id="rememberInfo">Remembering: (none)</div>
-
-        <div class="menu-sep"></div>
-        <div class="menu-label">Theme</div>
-        <div class="settings-row">
-          <label for="themeSelect">Theme</label>
-          <select id="themeSelect">
-            <option value="system">System</option>
-            <option value="dark">Dark</option>
-            <option value="light">Light</option>
-          </select>
-        </div>
-        <div class="menu-small">System follows OS/browser theme. Stored locally.</div>
-
-        <div class="menu-sep"></div>
-        <div class="menu-label">Auto-save</div>
-        <div class="settings-row">
-          <label for="autosaveSec">Interval (seconds)</label>
-          <input id="autosaveSec" type="number" min="5" max="300" step="5" />
-          <button id="btnAutosaveApply" class="primary" style="padding:6px 10px">Apply</button>
-          <button id="btnAutosaveReset" style="padding:6px 10px">Reset</button>
-        </div>
-        <div class="menu-small">Range 5–300 seconds.</div>
-      </div>
+    <div class="header-left">
+      <strong>Local Markdown Notes</strong>
     </div>
 
-    <button id="btnNew">New</button>
-    <button id="btnSave" class="primary">Save (<span id="saveKey">Ctrl+S</span>)</button>
-    <button id="btnRename" title="Rename current note (F2)">Rename (F2)</button>
-    <button id="btnDelete" class="danger">Delete</button>
+    <div class="header-center">
+      <button id="btnNew" title="Create a new note">New</button>
+      <button id="btnRename" title="Rename current note (F2)">Rename</button>
+      <button id="btnDelete" class="danger" title="Delete current note">Delete</button>
+    </div>
+
+    <div class="header-right">
+      <button id="btnSave" class="primary" title="Save (Ctrl+S)">Save</button>
+      <button id="btnThemeToggle" class="theme-toggle" title="Toggle light/dark mode"><span aria-hidden="true">🌙</span></button>
+      <div class="menu">
+        <button id="btnSettings" class="menu-btn" title="Settings"><span aria-hidden="true">⚙️</span></button>
+        <div class="menu-panel" id="settingsPanel" role="menu" aria-label="Settings">
+          <div class="menu-label">Vault</div>
+          <button class="menu-item" id="btnPick">Pick Notes Folder</button>
+          <button class="menu-item" id="btnForget">Forget Remembered Folder</button>
+          <div class="menu-small" id="rememberInfo">Remembering: (none)</div>
+
+          <div class="menu-sep"></div>
+          <div class="menu-label">Theme</div>
+          <div class="settings-row">
+            <label for="themeSelect">Theme</label>
+            <select id="themeSelect">
+              <option value="system">System</option>
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+          </div>
+          <div class="menu-small">System follows OS/browser theme. Stored locally.</div>
+
+          <div class="menu-sep"></div>
+          <div class="menu-label">Auto-save</div>
+          <div class="settings-row">
+            <label for="autosaveSec">Interval (seconds)</label>
+            <input id="autosaveSec" type="number" min="5" max="300" step="5" />
+            <button id="btnAutosaveApply" class="primary" style="padding:6px 10px">Apply</button>
+            <button id="btnAutosaveReset" style="padding:6px 10px">Reset</button>
+          </div>
+          <div class="menu-small">Range 5–300 seconds.</div>
+        </div>
+      </div>
+    </div>
   </header>
 
   <main>
     <aside>
       <div class="aside-head">
         <div class="row">
-          <span class="badge" id="folderBadge">No folder selected</span>
+          <button id="btnPickInline" class="primary">Pick Notes Folder</button>
+          <span class="badge" id="folderBadge" style="display:none">Folder selected</span>
           <span class="badge" id="countBadge">0 notes</span>
         </div>
         <div class="row">
@@ -375,8 +669,12 @@
   </main>
 
   <div id="status">
-    <span id="statusText">Open ⚙️ Settings → Pick Notes Folder. Tip: choose a folder inside OneDrive so notes sync.</span>
-    <span class="hint">Shortcuts: <kbd>Ctrl</kbd>+<kbd>S</kbd> save • <kbd>F2</kbd> rename</span>
+    <span id="statusText">Open Settings → Pick Notes Folder. Tip: choose a folder inside OneDrive so notes sync.</span>
+    <div class="status-shortcuts">
+      <span class="hint"><kbd>Ctrl</kbd>+<kbd>S</kbd> save</span>
+      <span class="hint">•</span>
+      <span class="hint"><kbd>F2</kbd> rename</span>
+    </div>
   </div>
 
   <!-- markdown-it from CDN (UMD build exposes window.markdownit) -->
@@ -445,6 +743,20 @@
     applyThemePref(localStorage.getItem(LS_THEME) || 'system');
   }
 
+  // -------------------- Theme toggle button --------------------
+  const themeToggleBtn = document.getElementById('btnThemeToggle');
+  function updateThemeToggleIcon() {
+    const isDark = document.body.dataset.theme === 'dark';
+    themeToggleBtn.innerHTML = isDark ? '<span aria-hidden="true">🌙</span>' : '<span aria-hidden="true">☀️</span>';
+  }
+  function toggleTheme() {
+    const currentTheme = document.body.dataset.theme;
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    applyThemePref(newTheme);
+    updateThemeToggleIcon();
+  }
+  themeToggleBtn.addEventListener('click', toggleTheme);
+
   // -------------------- Settings menu --------------------
   const settingsBtn = document.getElementById('btnSettings');
   const settingsPanel = document.getElementById('settingsPanel');
@@ -454,7 +766,7 @@
   settingsPanel.addEventListener('click', function(e) { e.stopPropagation(); });
   window.addEventListener('click', function() { closeSettings(); });
   window.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSettings(); });
-  if (themeSelect) themeSelect.addEventListener('change', function() { applyThemePref(themeSelect.value); });
+  if (themeSelect) themeSelect.addEventListener('change', function() { applyThemePref(themeSelect.value); updateThemeToggleIcon(); });
 
   // -------------------- Today panel (local date) --------------------
   const elDoy = document.getElementById('doy');
@@ -563,12 +875,30 @@
     return (text || '').replace(/\r\n?/g, '\n');
   }
 
-  function renderMarkdown(text) {
-    if (window.markdownit) {
-      const md = window.markdownit({ html: false, linkify: true, typographer: true });
-      return md.render(text || '');
-    }
+  function stripFrontmatter(text) {
     const t = normalizeNewlines(text);
+    if (!t.startsWith('---\n')) return t;
+
+    const closeDash = t.indexOf('\n---\n', 4);
+    const closeDots = t.indexOf('\n...\n', 4);
+    const closeAt = [closeDash, closeDots].filter(function(i) { return i >= 0; }).sort(function(a, b) { return a - b; })[0];
+
+    if (closeAt == null) return t;
+
+    const closeLen = (closeAt === closeDots) ? 5 : 5;
+    return t.slice(closeAt + closeLen).replace(/^\n+/, '');
+  }
+
+  const mdRenderer = window.markdownit
+    ? window.markdownit({ html: false, linkify: true, typographer: true })
+    : null;
+
+  function renderMarkdown(text) {
+    const markdownBody = stripFrontmatter(text || '');
+    if (mdRenderer) {
+      return mdRenderer.render(markdownBody);
+    }
+    const t = normalizeNewlines(markdownBody);
     return '<pre><code>' + escapeHtml(t) + '</code></pre>';
   }
 
@@ -586,6 +916,7 @@
   const elFileList = document.getElementById('filelist');
   const elEditor = document.getElementById('editor');
   const elPreview = document.getElementById('preview');
+  const btnPickInline = document.getElementById('btnPickInline');
   const elFolderBadge = document.getElementById('folderBadge');
   const elCountBadge = document.getElementById('countBadge');
   const elDirtyHint = document.getElementById('dirtyHint');
@@ -694,7 +1025,8 @@
     dirHandle = null;
     currentFileHandle = null;
     currentName = null;
-    elFolderBadge.textContent = 'No folder selected';
+    btnPickInline.style.display = '';
+    elFolderBadge.style.display = 'none';
     elFileList.innerHTML = '';
     elCountBadge.textContent = '0 notes';
     setStatus('Forgot folder. Use Settings → Pick Notes Folder.');
@@ -736,6 +1068,8 @@
     const ok = await ensurePermission(dirHandle, 'readwrite');
     if (!ok) { setStatus('Permission denied for folder.'); return; }
     await rememberFolder(dirHandle);
+    btnPickInline.style.display = 'none';
+    elFolderBadge.style.display = '';
     elFolderBadge.textContent = 'Folder selected';
     setStatus('Folder ready.');
     await refreshList();
@@ -750,6 +1084,8 @@
       const ok = await ensurePermission(handle, 'readwrite');
       if (!ok) { setRememberInfo('Remembering: yes (permission needed)'); return false; }
       dirHandle = handle;
+      btnPickInline.style.display = 'none';
+      elFolderBadge.style.display = '';
       elFolderBadge.textContent = 'Folder selected';
       setRememberInfo('Remembering: yes');
       await refreshList();
@@ -895,6 +1231,7 @@
   // -------------------- Wire events --------------------
   elEditor.addEventListener('input', function() { markDirty(true); renderAll(); });
 
+  btnPickInline.addEventListener('click', pickFolder);
   btnPick.addEventListener('click', pickFolder);
   btnForget.addEventListener('click', function() { closeSettings(); forgetFolder(); });
 
@@ -933,13 +1270,12 @@
 
   // -------------------- Boot --------------------
   (function init() {
-    document.getElementById('saveKey').textContent = navigator.platform.includes('Mac') ? '⌘S' : 'Ctrl+S';
-
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./sw.js");
     }
 
     loadTheme();
+    updateThemeToggleIcon();
     loadAutosave();
     startAutosave();
 
@@ -947,6 +1283,8 @@
     scheduleNextMidnightRefresh();
 
     if (!supportsFSA()) {
+      btnPickInline.style.display = 'none';
+      elFolderBadge.style.display = '';
       elFolderBadge.textContent = 'Limited mode';
       setRememberInfo('Remembering: unsupported');
       setStatus('Use Chrome/Edge for folder write access.');
