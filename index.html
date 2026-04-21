@@ -154,6 +154,44 @@
       border-color: #0d5a96;
     }
 
+    button.primary.needs-save {
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 0 0 4px rgba(0, 120, 212, 0.28);
+    }
+
+    button.primary.is-dim,
+    button.primary:disabled {
+      background: var(--surface-2);
+      border-color: var(--border);
+      color: var(--muted);
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.72;
+    }
+
+    button.primary.is-saving {
+      opacity: 0.88;
+      cursor: progress;
+    }
+
+    #btnSave.shortcut-pulse {
+      animation: savePulse 320ms ease-out;
+    }
+
+    #btnSave.saved-flash {
+      animation: saveFlash 420ms ease-out;
+    }
+
+    @keyframes savePulse {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes saveFlash {
+      0% { box-shadow: 0 0 0 0 rgba(16, 124, 16, 0.55); }
+      100% { box-shadow: 0 0 0 10px rgba(16, 124, 16, 0); }
+    }
+
     button.danger {
       color: var(--danger);
       background: transparent;
@@ -912,6 +950,7 @@
   let currentFileHandle = null;
   let currentName = null;
   let dirty = false;
+  let saving = false;
 
   const elFileList = document.getElementById('filelist');
   const elEditor = document.getElementById('editor');
@@ -952,6 +991,29 @@
     elDirtyHint.style.display = 'inline';
     elDirtyHint.textContent = dirty ? '● unsaved' : '● saved';
     elDirtyHint.style.color = dirty ? 'var(--danger)' : 'var(--ok)';
+    updateSaveButtonState();
+  }
+
+  function updateSaveButtonState() {
+    const needsSave = dirty;
+    btnSave.disabled = saving;
+    btnSave.classList.toggle('needs-save', needsSave && !saving);
+    btnSave.classList.toggle('is-dim', !needsSave && !saving);
+    btnSave.classList.toggle('is-saving', saving);
+  }
+
+  function replayButtonAnimation(className) {
+    btnSave.classList.remove(className);
+    void btnSave.offsetWidth;
+    btnSave.classList.add(className);
+  }
+
+  function animateShortcutSave() {
+    replayButtonAnimation('shortcut-pulse');
+  }
+
+  function animateSaveSuccess() {
+    replayButtonAnimation('saved-flash');
   }
 
   function renderAll() {
@@ -1044,6 +1106,9 @@
     autosaveTimer = setInterval(async function() {
       if (!dirty) return;
       if (!dirHandle || !currentFileHandle) return;
+      if (saving) return;
+      saving = true;
+      updateSaveButtonState();
       try {
         const ok = await ensurePermission(currentFileHandle, 'readwrite');
         if (!ok) return;
@@ -1052,9 +1117,14 @@
         await writable.write(content);
         await writable.close();
         markDirty(false);
+        animateSaveSuccess();
         setStatus('Auto-saved ' + currentName + ' (' + new Date().toLocaleTimeString() + ')');
         await refreshList();
       } catch (e) {}
+      finally {
+        saving = false;
+        updateSaveButtonState();
+      }
     }, autosaveSec * 1000);
   }
 
@@ -1169,6 +1239,16 @@
   }
 
   async function saveNote() {
+    if (saving) return;
+    if (!dirty) {
+      setStatus('No changes to save.');
+      return;
+    }
+
+    saving = true;
+    updateSaveButtonState();
+
+    try {
     if (!dirHandle) { await pickFolder(); if (!dirHandle) return; }
 
     if (!currentFileHandle) {
@@ -1190,8 +1270,13 @@
     await writable.close();
 
     markDirty(false);
+    animateSaveSuccess();
     await refreshList();
     setStatus('Saved ' + currentName);
+    } finally {
+      saving = false;
+      updateSaveButtonState();
+    }
   }
 
   async function renameNote() {
@@ -1243,7 +1328,11 @@
   sortMode.addEventListener('change', function() { refreshList(); });
 
   window.addEventListener('keydown', function(e) {
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') { e.preventDefault(); saveNote(); }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      animateShortcutSave();
+      saveNote();
+    }
     if (e.key === 'F2') { e.preventDefault(); renameNote(); }
   });
 
@@ -1297,6 +1386,7 @@
     refreshList();
 
     renderAll();
+    updateSaveButtonState();
   })();
 
   </script>
