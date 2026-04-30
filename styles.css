@@ -1,0 +1,272 @@
+:root {
+  --bg:#0b1020;
+  --surface:#0c1330;
+  --surface-2:#0e1531;
+  --panel:#121a33;
+  --panel-2:#1a2450;
+  --text:#e7ecff;
+  --muted:#a9b3da;
+  --accent:#6aa6ff;
+  --border:#26315f;
+  --shadow:rgba(0,0,0,.35);
+  --danger:#ff6a6a;
+  --danger-bg:#2a1420;
+  --danger-border:#5c2030;
+  --ok:#3ddc97;
+  --btn-bg:var(--panel-2);
+  --btn-border:var(--border);
+  --btn-text:var(--text);
+  --btn-primary-bg:var(--accent);
+  --btn-primary-border:var(--accent);
+  --btn-primary-text:#041027;
+  --code-bg:var(--surface-2);
+}
+body[data-theme="light"] {
+  --bg:#f6f8ff;
+  --surface:#ffffff;
+  --surface-2:#f0f3ff;
+  --panel:#ffffff;
+  --panel-2:#e7ecff;
+  --text:#0b1020;
+  --muted:#3a466b;
+  --accent:#2357ff;
+  --border:#cfd6ee;
+  --shadow:rgba(0,0,0,.15);
+  --danger:#c92a2a;
+  --danger-bg:#ffe7ea;
+  --danger-border:#f3b6bf;
+  --ok:#0f8a4c;
+  --btn-bg:#ffffff;
+  --btn-border:#cfd6ee;
+  --btn-text:#0b1020;
+  --btn-primary-bg:#2357ff;
+  --btn-primary-border:#2357ff;
+  --btn-primary-text:#ffffff;
+  --code-bg:#f0f3ff;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font: 14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+}
+header {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  background: linear-gradient(180deg, var(--panel), var(--bg));
+  border-bottom: 1px solid var(--border);
+}
+header .spacer { flex: 1; }
+button {
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  color: var(--btn-text);
+  padding: 7px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+button:hover { border-color: var(--accent); }
+button.primary {
+  background: var(--btn-primary-bg);
+  border-color: var(--btn-primary-border);
+  color: var(--btn-primary-text);
+  font-weight: 600;
+}
+button.danger {
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+  color: var(--danger);
+}
+.hint { color: var(--muted); font-size: 12px; }
+main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  min-height: 0;
+}
+aside {
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.aside-head {
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  background: var(--surface);
+}
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.badge {
+  font-size: 11px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.03);
+}
+select, input[type="text"], input[type="number"] {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 7px 10px;
+  border-radius: 8px;
+}
+select { cursor: pointer; }
+.filelist { overflow: auto; padding: 6px; flex: 1; min-height: 0; }
+.file {
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.file:hover { background: var(--panel); }
+.file.active { background: var(--panel-2); border: 1px solid var(--border); }
+.meta { font-size: 11px; color: var(--muted); }
+.daypanel {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.daypanel .top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.daypanel .title { font-size: 12px; color: var(--muted); font-weight: 600; }
+.daypanel .kv { display: flex; gap: 10px; flex-wrap: wrap; }
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 8px;
+  color: var(--muted);
+  font-size: 12px;
+  background: rgba(0,0,0,.03);
+}
+.daypanel .event { font-size: 12px; color: var(--text); line-height: 1.35; }
+.daypanel .event a { color: var(--accent); text-decoration: none; }
+.daypanel .event a:hover { text-decoration: underline; }
+.pane { min-height: 0; display: flex; flex-direction: column; }
+.pane h2 {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+#editorHost {
+  flex: 1;
+  min-height: 0;
+  background: var(--bg);
+  overflow: hidden;
+}
+#status {
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  background: var(--surface);
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+kbd {
+  font: 11px ui-monospace, monospace;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: var(--muted);
+}
+.menu { position: relative; display: inline-block; }
+.menu-btn { display: flex; align-items: center; gap: 6px; }
+.menu-panel {
+  position: absolute;
+  right: 0;
+  top: 42px;
+  min-width: 360px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 10px 28px var(--shadow);
+  display: none;
+  z-index: 50;
+}
+.menu-panel.open { display: block; }
+.menu-item {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  color: var(--text);
+  padding: 10px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.menu-item:hover { background: var(--panel); }
+.menu-sep { height: 1px; background: var(--border); margin: 6px 4px; }
+.menu-label { padding: 8px 10px; color: var(--muted); font-size: 12px; }
+.menu-small { padding: 6px 10px; color: var(--muted); font-size: 12px; }
+.settings-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 6px 10px; }
+.settings-row label { color: var(--muted); font-size: 12px; }
+.settings-row input[type="number"] { width: 92px; }
+
+/* TOAST UI tweaks to make it feel native in this app */
+.toastui-editor-defaultUI {
+  border: 0 !important;
+  height: 100% !important;
+  background: var(--surface);
+  color: var(--text);
+}
+.toastui-editor-toolbar {
+  border-bottom: 1px solid var(--border) !important;
+  background: var(--surface) !important;
+}
+.toastui-editor-toolbar-group button,
+.toastui-editor-mode-switch .tab-item {
+  color: inherit;
+}
+.toastui-editor-md-tab-container,
+.toastui-editor-mode-switch {
+  border-top: 1px solid var(--border) !important;
+  background: var(--surface) !important;
+}
+.toastui-editor-main {
+  background: var(--bg) !important;
+}
+.toastui-editor-contents,
+.toastui-editor-contents p,
+.toastui-editor-contents li,
+.toastui-editor-contents code,
+.toastui-editor-contents blockquote {
+  color: var(--text);
+}
+.toastui-editor-ww-container,
+.toastui-editor-md-container {
+  background: var(--bg) !important;
+}
+
+@media (max-width: 980px) {
+  main { grid-template-columns: 1fr; grid-template-rows: 320px 1fr; }
+  aside { border-right: 0; border-bottom: 1px solid var(--border); }
+}

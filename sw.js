@@ -1,13 +1,16 @@
-const CACHE = "mdnotes-v1";
+const CACHE = "mdnotes-v2";
 
 self.addEventListener("install", e => {
   e.waitUntil(
     caches.open(CACHE).then(cache =>
       cache.addAll([
         "./",
-        "./local-notes.html",
+        "./index.html",
+        "./styles.css",
+        "./app.js",
         "./manifest.json",
-        "https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"
+        "https://uicdn.toast.com/editor/latest/toastui-editor.min.css",
+        "https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"
       ])
     )
   );
