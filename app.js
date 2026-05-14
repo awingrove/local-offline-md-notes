@@ -60,92 +60,6 @@ window.addEventListener('click', function() { closeSettings(); });
 window.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSettings(); });
 if (themeSelect) themeSelect.addEventListener('change', function() { applyThemePref(themeSelect.value); });
 
-// -------------------- Today panel (local date) --------------------
-const elDoy = document.getElementById('doy');
-const elIsoWeek = document.getElementById('isoweek');
-const elOnThisDay = document.getElementById('onThisDay');
-const btnOnThisDay = document.getElementById('btnOnThisDay');
-let cachedOnThisDay = { key: null, events: [] };
-
-function dayOfYearLocal(d) {
-  const start = new Date(d.getFullYear(), 0, 0);
-  const diff = d - start;
-  return Math.floor(diff / 86400000);
-}
-function isoWeekLocal(d) {
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  const dayNum = date.getUTCDay() || 7;
-  date.setUTCDate(date.getUTCDate() + 4 - dayNum);
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  const weekNo = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
-  return { year: date.getUTCFullYear(), week: weekNo };
-}
-function wikiTitleToUrl(title) {
-  return 'https://en.wikipedia.org/wiki/' + encodeURIComponent(String(title || '').replace(/ /g, '_'));
-}
-function pickRandomEvent() {
-  const arr = cachedOnThisDay.events || [];
-  if (!arr.length) {
-    elOnThisDay.textContent = 'No “On this day” data available.';
-    return;
-  }
-  const e = arr[Math.floor(Math.random() * arr.length)];
-  const year = e.year ? String(e.year) : '';
-  const text = e.text || '';
-  let url = null;
-  let label = null;
-  try {
-    const p = (e.pages && e.pages[0]) ? e.pages[0] : null;
-    if (p) {
-      url = p.content_urls && p.content_urls.desktop && p.content_urls.desktop.page ? p.content_urls.desktop.page : null;
-      label = p.title || null;
-      if (!url && p.title) url = wikiTitleToUrl(p.title);
-    }
-  } catch (err) {}
-  if (url) {
-    const safeLabel = escapeHtml(label || 'Wikipedia');
-    elOnThisDay.innerHTML = '<b>' + escapeHtml(year) + '</b> — ' + escapeHtml(text)
-      + ' <span class="hint">·</span> <a href="' + url + '" target="_blank" rel="noopener">' + safeLabel + '</a>';
-  } else {
-    elOnThisDay.innerHTML = '<b>' + escapeHtml(year) + '</b> — ' + escapeHtml(text);
-  }
-}
-async function loadOnThisDay(forceFetch) {
-  const now = new Date();
-  const mm = pad2(now.getMonth() + 1);
-  const dd = pad2(now.getDate());
-  const key = mm + '-' + dd;
-  elDoy.textContent = String(dayOfYearLocal(now));
-  const iso = isoWeekLocal(now);
-  elIsoWeek.textContent = iso.year + '-W' + String(iso.week).padStart(2, '0');
-  if (!forceFetch && cachedOnThisDay.key === key && cachedOnThisDay.events.length) {
-    pickRandomEvent();
-    return;
-  }
-  elOnThisDay.textContent = 'Loading “On this day”…';
-  const url = 'https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/events/' + mm + '/' + dd;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    const events = Array.isArray(data && data.events) ? data.events : [];
-    cachedOnThisDay = { key: key, events: events };
-    pickRandomEvent();
-  } catch (e) {
-    elOnThisDay.textContent = 'Could not load “On this day” (offline or blocked).';
-  }
-}
-function scheduleNextMidnightRefresh() {
-  const now = new Date();
-  const next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 2);
-  const ms = Math.max(1000, next - now);
-  setTimeout(function() { loadOnThisDay(true); scheduleNextMidnightRefresh(); }, ms);
-}
-btnOnThisDay.addEventListener('click', function() {
-  if (cachedOnThisDay.events && cachedOnThisDay.events.length) pickRandomEvent();
-  else loadOnThisDay(true);
-});
-
 // -------------------- Editor --------------------
 let toastEditor = null;
 let suppressEditorChange = false;
@@ -204,6 +118,7 @@ const btnSave = document.getElementById('btnSave');
 const btnRename = document.getElementById('btnRename');
 const btnDelete = document.getElementById('btnDelete');
 const sortMode = document.getElementById('sortMode');
+const searchBox = document.getElementById('searchBox');
 const autosaveSecInput = document.getElementById('autosaveSec');
 const btnAutosaveApply = document.getElementById('btnAutosaveApply');
 const btnAutosaveReset = document.getElementById('btnAutosaveReset');
@@ -504,8 +419,6 @@ btnAutosaveReset.addEventListener('click', function() {
   }
   loadTheme();
   loadAutosave();
-  loadOnThisDay(false);
-  scheduleNextMidnightRefresh();
   initEditor();
   startAutosave();
   if (!supportsFSA()) {
