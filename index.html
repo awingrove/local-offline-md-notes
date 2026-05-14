@@ -66,6 +66,9 @@
           <span class="badge" id="countBadge">0 notes</span>
         </div>
         <div class="row">
+          <input type="text" id="searchBox" placeholder="Search notes..." />
+        </div>
+        <div class="row">
           <label class="hint" for="sortMode">Sort</label>
           <select id="sortMode">
             <option value="name">Name</option>
@@ -74,19 +77,7 @@
         </div>
       </div>
 
-      <div class="filelist" id="filelist"></div>
-
-      <div class="daypanel" id="dayPanel">
-        <div class="top">
-          <div class="title">Today</div>
-          <button id="btnOnThisDay" title="Pick another random event" style="padding:6px 8px">↻</button>
-        </div>
-        <div class="kv">
-          <span class="pill">Day <b id="doy">—</b></span>
-          <span class="pill">ISO week <b id="isoweek">—</b></span>
-        </div>
-        <div class="event" id="onThisDay">Loading “On this day”…</div>
-      </div>
+<div class="filelist" id="filelist"></div>
     </aside>
 
     <section class="pane">
